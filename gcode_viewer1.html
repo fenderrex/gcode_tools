@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <body>
-<! <input type="text"  value=";Enter gcode!"> 
-<button onclick="myFunction()">Try it</button>
-<textarea rows="10" cols="50" id="myText">
+  <!-- <input type="text"  value=";Enter gcode!"> -->
+  <button onclick="setTimeout(myFunction, 1);">Try it</button>
+  <textarea rows="10" cols="50" id="myText">
 G92 E0
 G0 E-1
 G0 X-5.61137152777778 Y32.6357340494792
@@ -594,195 +595,31 @@ G92 E0
 G0 E-1
 G0 E-1
 G0 X0 Y0
+  </textarea>
+  <div height="50" width="100%">
+    <p id="note"></p>
+  </div>
+  <form>
+    <b>scale:</b>
+    <br>X:
+    <input type="range" value=16 id="sx" min="1" max="20">
+    <br>Y:
+    <input type="range" value=16 id="sy" min="1" max="20">
+    <br>
+    <b>centrer:</b>
+    <br>X:
+    <input type="text" value=700 id="px">
+    <br>Y:
+    <input type="text" value=700 id="py">
+  </form>
+  <div style="width: 800px; height:200px; overflow-y: scroll;">
+    <p id="log">start</p>
+  </div>
+  <canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #d3d3d3;">
+    Your browser does not support the HTML5 canvas tag.</canvas>
 
-</textarea>
-<div height="50" width="100%" ><p id="note"></p></div>
-<form >
-	<!onmouseup
-  <b>scale:</b><br>
-  X:
-  <input type="range" value=16 id="sx" min="1" max="20">
-  <br>
-  Y:
-  <input type="range" value=16 id="sy" min="1" max="20">
-  <br>
-  <b>centrer:</b><br>
-  X:
-  <input type="text" value=700 id="px"><br>
-  Y:
-  <input type="text" value=700 id="py">
-</form>
-<div style="width: 800px; height:200px; overflow-y: scroll;">
-<p id="log">start</p>
-</div>
-<canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #d3d3d3;">
-Your browser does not support the HTML5 canvas tag.</canvas>
-
-<script>
-var pop =0
-function print(stuff){
-pop++
-document.getElementById("note").innerHTML=pop
-document.getElementById("log").innerHTML=document.getElementById("log").innerHTML+"<br>"+stuff
-}
-//print("gogogogogoggo")
-function myFunction(){
-cls()
-var isDrawing=true
-var lines = document.getElementById("myText").value.split("\n");
-var bits =[]
-var E=Y=X=0
-var pos2=[]
-var pos1=[]
-var drawtodate = false
-var drawLock=false
-var gline=[]
-//print(lines)
-for (w = 0; w < lines.length; w++){
-	
-	bits[bits.length]=lines[w].split(" ")
-}
-//print(bits.length)
-for (i = 0; i < bits.length; i++){//for LINE	
-	//print("  "+bits[i]+"  ")
-	//print(drawtodate)
-	//print(bits[i])
-	print("sdfgsdfsdfsdfsdfssdfdsfdsfdsdfs")
-	if (bits[i][0].toLowerCase()=="g0"){
-		print("sdfgsdfsdfsdfsdfssdfdsfdsfdsdfs")
-		print(bits[i])
-		if (bits[i][1].toLowerCase()=="e-1"){
-			isDrawing=false
-			drawtodate=false
-			print("not drawing")
-		}
-		else if(bits[i][1].toLowerCase()=="e0"){
-			isDrawing=true
-			drawtodate=false
-			print("drawing")
-		}
-		
-		else{
-			for (z = 0; z < bits[i].length; z++){
-				if (bits[i][z].charAt(0).toLowerCase()=="y"){
-					pos1[1]=bits[i][z].replace("y","").replace("Y","")
-				}
-				else if (bits[i][z].charAt(0).toLowerCase()=="x"){
-					pos1[0]=bits[i][z].replace("x","").replace("X","")
-				}
-				else if (bits[i][z].charAt(0).toLowerCase()=="e"){
-					pos1[2]=bits[i][z].replace("e","").replace("E","")
-				}
-			}
-			drawLock=false
-			drawtodate=false
-		}
-	}
-	if (bits[i][0].toLowerCase()=="g1"){
-		drawLock=true
-		//document.getElementById("demo").innerHTML =bits[i];// bits[i][z].charAt(0);//z;//bits[i][z].charAt(0);
-			if (drawtodate==false){
-				drawtodate=true
-				for (z = 0; z < bits[i].length; z++){
-					//print("test")
-					//print(bits[i][z])
-				
-					if (bits[i][z].charAt(0).toLowerCase()=="y"){
-						pos2[1]=bits[i][z].replace("y","").replace("Y","")
-					}
-					else if (bits[i][z].charAt(0).toLowerCase()=="x"){
-						pos2[0]=bits[i][z].replace("x","").replace("X","")
-					}
-					else if (bits[i][z].charAt(0).toLowerCase()=="e"){
-						pos2[2]=bits[i][z].replace("e","").replace("E","")
-					}
-				}
-				//print(pos1+"<br>"+pos2)
-			}else if (isDrawing){
-				for (z = 0; z < bits[i].length; z++){
-					
-					if (bits[i][z].charAt(0).toLowerCase()=="y"){
-						pos1[1]=bits[i][z].replace("y","").replace("Y","")
-					}
-					else if (bits[i][z].charAt(0).toLowerCase()=="x"){
-						pos1[0]=bits[i][z].replace("x","").replace("X","")
-					}
-					else if (bits[i][z].charAt(0).toLowerCase()=="e"){
-						pos1[2]=bits[i][z].replace("e","").replace("E","")
-					}
-				}
-				drawtodate=false
-			}
-			
-
-
-		//drawtodate=true//make pos1 update next
-		
-		}
-	else {
-	//document.getElementById("demo").innerHTML =[bits[i],i];
-	}
-	gline=[pos1,pos2,i]
-	if(drawLock){
-	//print ("DRAWING THAT")
-drawline(gline,isDrawing)
-}else{print("NOT DRAWING THAT")}
-}		
-pop=0
-}
-	//parseFloat(x);
-
-var count =0
-var Pos1=[]
-var Pos2=[]
-
-var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
-var center=[0,0]
-var scale=[10,10]
-var drop=false
-cls()
-function cls(){
-c = document.getElementById("myCanvas");
-ctx = c.getContext("2d");
-//ctx.clearRect(0, 0, canvas.width, canvas.height);
-center=[0,0]
-scale=[10,10]
-drop=false
-for(i = 0; i < 1000; i=i+10){
-drawline([[i,0],[i,400]],true)
-drawline([[0,i],[400,i]],true)
-}
-drop=true
-}
-function drawline(gline,isDrawing){
-//alert(gline);
-if (isDrawing){
-count=count+1
-pos1=gline[0]
-pos2=gline[1]
-if (drop){
-scale[0]=document.getElementById("sx").value;
-scale[1]=document.getElementById("sy").value*-1;
-center[0]=document.getElementById("px").value;
-center[1]=document.getElementById("py").value;
-
-print("asdasd")
-print(scale)
-print(center)
-}
-Pos1=[(parseFloat(pos1[0])*scale[0])+parseFloat(center[0]),(parseFloat(pos1[1])*scale[1])+parseFloat(center[1])]
-Pos2=[(parseFloat(pos2[0])*scale[0])+parseFloat(center[0]),(parseFloat(pos2[1])*scale[1])+parseFloat(center[1])]
-if(drop){print(Pos1)}
-//print("X1__"+Pos1[0]+"Y1__"+Pos1[1]+",X2__"+Pos2[0]+"Y2__"+Pos2[1]+"line:"+count)
-//setTimeout(function(){, 1)
-
-ctx.moveTo(Pos1[0],Pos1[1]);
-ctx.lineTo(Pos2[0],Pos2[1]);
-ctx.stroke();
-}
-}
-</script>
+  <script src="gcode.js"></script>
 
 </body>
+
 </html>
