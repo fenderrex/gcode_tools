@@ -1,13 +1,23 @@
 var document = window.document;
 var pop = 0;
-
+var d = new Date();
+var time;
+var old=0;
+var buffer="";
 function print(stuff) {
-  return undefined;
+  time = d.getTime();
+  if (time-old>2000){
+      old=time
+  //return undefined;
   window.requestAnimationFrame(function () {
     pop++;
     document.getElementById("note").innerHTML = pop;
-    document.getElementById("log").innerHTML = document.getElementById("log").innerHTML + "<br>" + stuff;
+    document.getElementById("log").innerHTML = document.getElementById("log").innerHTML +buffer;
+      buffer="";
   });
+  }else{
+     buffer=buffer+stuff +"<br>" + stuff;
+  }
 }
 //print("gogogogogoggo")
 function myFunction() {
@@ -60,7 +70,7 @@ function myFunction() {
     }
     if (bits[i][0].toLowerCase() == "g1") {
       drawLock = true;
-      //document.getElementById("demo").innerHTML =bits[i];// bits[i][z].charAt(0);//z;//bits[i][z].charAt(0);
+      
       if (drawtodate === false) {
         drawtodate = true;
         for (var z = 0; z < bits[i].length; z++) {
@@ -91,14 +101,14 @@ function myFunction() {
 
 
 
-      //drawtodate=true//make pos1 update next
+      drawtodate=true//make pos1 update next
 
     } else {
       //document.getElementById("demo").innerHTML =[bits[i],i];
     }
     gline = [pos1, pos2, i];
     if (drawLock) {
-      //print ("DRAWING THAT")
+      print ("DRAWING THAT")
       window.setTimeout(drawLineLater(gline, isDrawing), 1);
     } else {
       print("NOT DRAWING THAT");
@@ -142,7 +152,7 @@ function drawline(gline, isDrawing) {
     var pos2 = gline[1];
     if (drop) {
       scale[0] = document.getElementById("sx").value;
-      scale[1] = document.getElementById("sy").value * -1;
+      scale[1] = document.getElementById("sy").value * -1;//-1 accounts for the flit on Y axis add check box for both!
       center[0] = document.getElementById("px").value;
       center[1] = document.getElementById("py").value;
 
